@@ -1,0 +1,17 @@
+<header class="app-header">
+  <div class="header-content">
+    <a class="app-title" routerLink="/">🔧 Appliance Service</a>
+    <nav class="app-nav">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
+      <a routerLink="/purchase" routerLinkActive="active">Catalog</a>
+      <a routerLink="/my-appliances" routerLinkActive="active">My Appliances</a>
+      <a routerLink="/compliance" routerLinkActive="active">Compliances</a>
+      <a routerLink="/maintenance" routerLinkActive="active">Maintenance</a>
+    </nav>
+  </div>
+</header>
+<main class="app-main">
+  <router-outlet />
+</main>
+
+<app-chat-widget />

@@ -1,0 +1,45 @@
+<div class="list-container">
+  <div class="list-header">
+    <div>
+      <h2>Maintenance Requests</h2>
+      <p class="subtitle">Track all appliance maintenance service requests</p>
+    </div>
+    <button class="btn btn-primary" (click)="requestNew()">+ Request Service</button>
+  </div>
+
+  @if (rows().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">🔧</div>
+      <h3>No maintenance requests yet</h3>
+      <p>Request your first maintenance service to get started.</p>
+      <button class="btn btn-primary" (click)="requestNew()">Request Service</button>
+    </div>
+  } @else {
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Appliance</th>
+            <th>Description</th>
+            <th>Preferred Date</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th>Updated</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows(); track row.id) {
+            <tr>
+              <td class="cell-appliance">{{ row.applianceName }}</td>
+              <td class="cell-description">{{ row.description }}</td>
+              <td>{{ row.preferredDate | date:'mediumDate' }}</td>
+              <td><span class="badge" [class]="statusClass(row.status)">{{ row.status }}</span></td>
+              <td>{{ row.createdAt | date:'short' }}</td>
+              <td>{{ row.updatedAt | date:'short' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

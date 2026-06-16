@@ -1,0 +1,143 @@
+.form-container {
+  max-width: 640px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+
+  h2 {
+    margin: 0 0 0.25rem;
+    font-size: 1.5rem;
+    color: #1a1a2e;
+  }
+
+  .subtitle {
+    margin: 0 0 2rem;
+    color: #6b7280;
+    font-size: 0.95rem;
+  }
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #374151;
+  }
+
+  .required {
+    color: #ef4444;
+  }
+
+  .no-appliances {
+    color: #9ca3af;
+    font-style: italic;
+    font-size: 0.9rem;
+  }
+
+  select,
+  input[type='text'],
+  input[type='date'],
+  textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    background: #f9fafb;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+
+    &:focus {
+      outline: none;
+      border-color: #8b5cf6;
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+    }
+  }
+
+  textarea {
+    resize: vertical;
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btn-primary {
+  background: #8b5cf6;
+  color: #fff;
+
+  &:hover:not(:disabled) {
+    background: #7c3aed;
+  }
+}
+
+.btn-secondary {
+  background: #f3f4f6;
+  color: #374151;
+
+  &:hover {
+    background: #e5e7eb;
+  }
+}
+
+.confirmation {
+  max-width: 480px;
+  margin: 4rem auto;
+  text-align: center;
+  padding: 3rem 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+
+  .confirmation-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1.5rem;
+    background: #ede9fe;
+    color: #7c3aed;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  h2 {
+    margin: 0 0 0.5rem;
+    color: #1a1a2e;
+  }
+
+  p {
+    color: #6b7280;
+    margin: 0 0 2rem;
+  }
+}

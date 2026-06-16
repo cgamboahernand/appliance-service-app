@@ -1,0 +1,41 @@
+<div class="list-container">
+  <div class="list-header">
+    <div>
+      <h2>My Appliances</h2>
+      <p class="subtitle">Your purchased appliances</p>
+    </div>
+    <button class="btn btn-primary" (click)="goToCatalog()">Browse Catalog</button>
+  </div>
+
+  @if (rows().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">🏠</div>
+      <h3>No appliances purchased yet</h3>
+      <p>Browse the catalog to purchase your first appliance.</p>
+      <button class="btn btn-primary" (click)="goToCatalog()">Browse Catalog</button>
+    </div>
+  } @else {
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Appliance</th>
+            <th>Serial</th>
+            <th>Description</th>
+            <th>Purchase Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows(); track row.id) {
+            <tr>
+              <td class="cell-name">{{ row.name }}</td>
+              <td><code class="serial">{{ row.serial }}</code></td>
+              <td>{{ row.description }}</td>
+              <td>{{ row.purchaseDate | date:'mediumDate' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

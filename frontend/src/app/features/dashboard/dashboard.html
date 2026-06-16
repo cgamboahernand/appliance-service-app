@@ -1,0 +1,24 @@
+<div class="dashboard">
+  <h2>Dashboard</h2>
+  <p class="subtitle">Welcome back! Here's your overview.</p>
+
+  <div class="cards">
+    <div class="card card-purchase" (click)="navigateTo('/my-appliances')">
+      <div class="card-icon">🏠</div>
+      <div class="card-count">{{ purchasedCount() }}</div>
+      <div class="card-label">Purchased Products</div>
+    </div>
+
+    <div class="card card-maintenance" (click)="navigateTo('/maintenance')">
+      <div class="card-icon">🔧</div>
+      <div class="card-count">{{ maintenanceCount() }}</div>
+      <div class="card-label">Maintenance Requests</div>
+    </div>
+
+    <div class="card card-compliance" (click)="navigateTo('/compliance')">
+      <div class="card-icon">📋</div>
+      <div class="card-count">{{ complianceCount() }}</div>
+      <div class="card-label">Issues Reported</div>
+    </div>
+  </div>
+</div>

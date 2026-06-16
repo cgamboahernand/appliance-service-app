@@ -1,0 +1,29 @@
+<div class="catalog-container">
+  <h2>Appliance Catalog</h2>
+  <p class="subtitle">Browse and purchase appliances</p>
+
+  @if (lastPurchased()) {
+    <div class="confirmation-banner">
+      ✓ Appliance <strong>{{ lastPurchased() }}</strong> purchased successfully!
+    </div>
+  }
+
+  <div class="catalog-grid">
+    @for (item of catalog(); track item.id) {
+      <div class="catalog-card" [class.unavailable]="!item.available">
+        <div class="card-header">
+          <h3>{{ item.name }}</h3>
+          <span class="serial">{{ item.serial }}</span>
+        </div>
+        <p class="card-description">{{ item.description }}</p>
+        <div class="card-footer">
+          @if (item.available) {
+            <button class="btn btn-primary" (click)="onPurchase(item.serial)">Purchase</button>
+          } @else {
+            <span class="badge badge-sold">Sold</span>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

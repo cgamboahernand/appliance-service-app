@@ -1,0 +1,45 @@
+<div class="list-container">
+  <div class="list-header">
+    <div>
+      <h2>Compliance Reports</h2>
+      <p class="subtitle">Track all filed appliance compliance reports</p>
+    </div>
+    <button class="btn btn-primary" (click)="fileNew()">+ File New Compliance</button>
+  </div>
+
+  @if (rows().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">📋</div>
+      <h3>No compliances filed yet</h3>
+      <p>File your first compliance report to get started.</p>
+      <button class="btn btn-primary" (click)="fileNew()">File a Compliance</button>
+    </div>
+  } @else {
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Appliance</th>
+            <th>Serial</th>
+            <th>Reason</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows(); track row.id) {
+            <tr>
+              <td class="cell-appliance">{{ row.applianceName }}</td>
+              <td><code>{{ row.serialId }}</code></td>
+              <td><span class="badge badge-reason">{{ row.reason }}</span></td>
+              <td class="cell-description">{{ row.description }}</td>
+              <td><span class="badge" [class]="statusClass(row.status)">{{ row.status }}</span></td>
+              <td>{{ row.createdAt | date:'short' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
