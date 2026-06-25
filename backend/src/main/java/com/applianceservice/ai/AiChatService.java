@@ -1,81 +1,65 @@
 package com.applianceservice.ai;
 
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.messages.AssistantMessage;
-import org.springframework.ai.chat.messages.Message;
-import org.springframework.ai.chat.messages.SystemMessage;
-import org.springframework.ai.chat.messages.UserMessage;
-import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class AiChatService {
 
     private final ChatClient chatClient;
-    private final Map<String, List<Message>> conversationHistory = new ConcurrentHashMap<>();
+    private final ApplianceTools applianceTools;
 
     private static final String SYSTEM_PROMPT = """
-            You are a helpful customer service assistant for an appliance service company.
-            You can help users with the following tasks:
-            
-            1. **Browse Appliances** — Show available appliances in the catalog
-            2. **Purchase Appliances** — Help users buy an appliance by its serial number
-            3. **View My Appliances** — Show what appliances the user already owns
-            4. **File Compliance Reports** — Help users report safety issues, defects, or recalls for their appliances
-            5. **Schedule Maintenance** — Help users request a maintenance service for their appliances
-            6. **View Maintenance Requests** — Show the user's maintenance request history
-            7. **View Compliance Reports** — Show the user's compliance report history
-            
-            Guidelines:
-            - Be friendly, concise, and helpful.
-            - When the user wants to perform an action (purchase, file compliance, schedule maintenance), gather the required information conversationally before calling the tool.
-            - For purchases: confirm which appliance the user wants before proceeding.
-            - For compliance reports: ask for the reason (Safety, Defect, Regulatory, Recall, Other) and a description.
-            - For maintenance: ask for a description of the issue and a preferred date.
-            - Always confirm the result of an action to the user.
-            - If the user asks something unrelated to appliance services, politely redirect them.
-            - Today's date is %s.
-            """.formatted(java.time.LocalDate.now().toString());
+            You are an appliance service assistant for our company. Your ONLY purpose is to help users with:
+            1. Browsing and purchasing appliances from our catalog
+            2. Filing compliance reports for their purchased appliances
+            3. Scheduling maintenance requests for their purchased appliances
+            4. Viewing their purchases, compliance reports, and maintenance requests
+
+            STRICT RULES:
+            - You must NEVER answer questions outside of the appliance service domain.
+            - Always be helpful and friendly ONLY within your domain.
+            - When listing appliances or purchases, use clear formatted output.
+            - Before performing any action (purchase, file compliance, schedule maintenance), confirm the details with the user.
+            - The current user is always 'user-1'.
+            """;
+
+    private static final String OFF_TOPIC_RESPONSE =
+            "I can only assist with appliance-related tasks: browsing our catalog, making purchases, filing compliance reports, or scheduling maintenance. How can I help you with your appliances today?";
+
+    private static final List<String> ON_TOPIC_KEYWORDS = List.of(
+            "appliance", "purchase", "buy", "catalog", "compliance", "report", "maintenance",
+            "schedule", "repair", "fix", "broken", "defect", "safety", "recall", "regulatory",
+            "refrigerator", "fridge", "dishwasher", "washer", "dryer", "microwave", "stove",
+            "oven", "freezer", "toaster", "coffee", "blender", "iron", "vacuum", "mop",
+            "air conditioner", "heater", "purifier", "dehumidifier", "fan", "speaker",
+            "water heater", "serial", "owned", "my appliance", "list", "show", "what do i have",
+            "file", "issue", "problem", "request", "service", "hello", "hi", "hey", "help",
+            "thanks", "thank you", "yes", "no", "ok", "sure", "please", "what can you do"
+    );
 
     public AiChatService(ChatClient.Builder chatClientBuilder, ApplianceTools applianceTools) {
-        this.chatClient = chatClientBuilder
-                .defaultSystem(SYSTEM_PROMPT)
-                .defaultTools(applianceTools)
-                .build();
+        this.applianceTools = applianceTools;
+        this.chatClient = chatClientBuilder.build();
+    }
+
+    private boolean isOnTopic(String message) {
+        String lower = message.toLowerCase();
+        return ON_TOPIC_KEYWORDS.stream().anyMatch(lower::contains);
     }
 
     public String chat(String sessionId, String userMessage) {
-        List<Message> history = conversationHistory.computeIfAbsent(sessionId, k -> new ArrayList<>());
-
-        history.add(new UserMessage(userMessage));
-
-        // Build messages list: system + history
-        List<Message> messages = new ArrayList<>();
-        messages.add(new SystemMessage(SYSTEM_PROMPT));
-        messages.addAll(history);
-
-        String response = chatClient.prompt(new Prompt(messages))
-                .call()
-                .content();
-
-        history.add(new AssistantMessage(response));
-
-        // Keep history manageable (last 40 messages)
-        if (history.size() > 40) {
-            List<Message> trimmed = new ArrayList<>(history.subList(history.size() - 40, history.size()));
-            history.clear();
-            history.addAll(trimmed);
+        if (!isOnTopic(userMessage)) {
+            return OFF_TOPIC_RESPONSE;
         }
 
-        return response;
-    }
-
-    public void clearSession(String sessionId) {
-        conversationHistory.remove(sessionId);
+        return chatClient.prompt()
+                .system(SYSTEM_PROMPT)
+                .user(userMessage)
+                .tools(applianceTools)
+                .call()
+                .content();
     }
 }
